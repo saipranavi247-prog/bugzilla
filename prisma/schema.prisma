@@ -1,0 +1,125 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  passwordHash  String
+  role          String    @default("developer") // admin, developer, reporter
+  createdAt     DateTime  @default(now())
+  
+  reportedIssues Issue[]  @relation("Reporter")
+  assignedIssues Issue[]  @relation("Assignee")
+  comments       Comment[]
+  auditLogs      AuditLog[]
+  watchers       Watcher[]
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  key         String   @unique // e.g., "BUG"
+  description String?
+  createdAt   DateTime @default(now())
+  
+  issues      Issue[]
+  workflows   WorkflowState[]
+}
+
+model WorkflowState {
+  id          String   @id @default(uuid())
+  projectId   String
+  name        String
+  description String?
+  // Store valid next states as JSON or comma separated. Using JSON string for sqlite compat.
+  allowedTransitions String @default("[]") 
+  isInitial   Boolean  @default(false)
+  isTerminal  Boolean  @default(false)
+  
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Issue {
+  id          String   @id @default(uuid())
+  issueKey    String   @unique // e.g., "BUG-123"
+  title       String
+  description String
+  status      String   // Links to WorkflowState name conceptually
+  severity    String   @default("normal")
+  priority    String   @default("medium")
+  version     String?
+  environment String?
+  
+  reporterId  String
+  assigneeId  String?
+  projectId   String
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reporter    User     @relation("Reporter", fields: [reporterId], references: [id])
+  assignee    User?    @relation("Assignee", fields: [assigneeId], references: [id])
+  project     Project  @relation(fields: [projectId], references: [id])
+
+  comments    Comment[]
+  auditLogs   AuditLog[]
+  watchers    Watcher[]
+  
+  // Dependencies
+  blocking    IssueLink[] @relation("Blocking")
+  blockedBy   IssueLink[] @relation("BlockedBy")
+}
+
+model IssueLink {
+  id             String @id @default(uuid())
+  type           String // "blocks", "duplicates", "relates"
+  blockingId     String
+  blockedById    String
+  
+  blockingIssue  Issue  @relation("Blocking", fields: [blockingId], references: [id], onDelete: Cascade)
+  blockedByIssue Issue  @relation("BlockedBy", fields: [blockedById], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  issueId   String
+  userId    String
+  createdAt DateTime @default(now())
+
+  issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  issueId   String
+  userId    String
+  action    String
+  changes   String   // JSON string of changes
+  createdAt DateTime @default(now())
+
+  issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Watcher {
+  id        String   @id @default(uuid())
+  userId    String
+  issueId   String
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, issueId])
+}
