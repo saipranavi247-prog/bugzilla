@@ -8,10 +8,10 @@ export function SidebarNav() {
   const pathname = usePathname()
 
   const links = [
-    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/issues", label: "Issues", icon: List },
-    { href: "/report-bug", label: "Report a Bug", icon: Bug },
     { href: "/projects", label: "Projects", icon: Folder },
+    { href: "/report-bug", label: "Report a Bug", icon: Bug },
+    { href: "/issues", label: "Issues", icon: List },
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   ]
 
   return (
