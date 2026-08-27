@@ -3,6 +3,8 @@ import Link from "next/link"
 import { Button } from "./ui/button"
 import { Bug, LayoutDashboard, List, Folder } from "lucide-react"
 
+import { SidebarNav } from "./SidebarNav"
+
 export default async function Sidebar() {
   const session = await auth()
 
@@ -17,24 +19,7 @@ export default async function Sidebar() {
         </Link>
       </div>
 
-      <nav className="flex-1 px-4 space-y-2">
-        <Link href="/dashboard" className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground font-medium text-sm transition-colors">
-          <LayoutDashboard className="h-4 w-4" />
-          <span>Dashboard</span>
-        </Link>
-        <Link href="/issues" className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground font-medium text-sm transition-colors">
-          <List className="h-4 w-4" />
-          <span>Issues</span>
-        </Link>
-        <Link href="/report-bug" className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground font-medium text-sm transition-colors text-primary">
-          <Bug className="h-4 w-4" />
-          <span>Report a Bug</span>
-        </Link>
-        <Link href="/projects" className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground font-medium text-sm transition-colors">
-          <Folder className="h-4 w-4" />
-          <span>Projects</span>
-        </Link>
-      </nav>
+      <SidebarNav />
 
       <div className="p-4 border-t border-sidebar-border space-y-4">
         <div className="px-3 text-sm font-medium text-gray-400 truncate">

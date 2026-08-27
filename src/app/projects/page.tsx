@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import { Folder } from "lucide-react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { CreateProjectDialog } from "@/components/projects/CreateProjectDialog"
 
 export default async function ProjectsPage() {
   const session = await auth()
@@ -27,9 +27,7 @@ export default async function ProjectsPage() {
           </h1>
           <p className="text-muted-foreground mt-1">Manage and view all your software projects.</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90 text-white font-semibold">
-          Create Project
-        </Button>
+        <CreateProjectDialog />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
