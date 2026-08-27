@@ -264,12 +264,23 @@ export default function AuthPage() {
                 transition={{ duration: 0.2 }}
               >
                 <form onSubmit={handleSignUp} className="space-y-4">
-                  <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-muted/30 mb-6">
-                    <span className="text-sm font-medium truncate">{email || "New Account"}</span>
-                    <button type="button" onClick={() => setStep("EMAIL")} className="text-xs text-primary font-medium hover:underline shrink-0 ml-2">
-                      Change
-                    </button>
-                  </div>
+                  {email ? (
+                    <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-muted/30 mb-6">
+                      <span className="text-sm font-medium truncate">{email}</span>
+                      <button type="button" onClick={() => setStep("EMAIL")} className="text-xs text-primary font-medium hover:underline shrink-0 ml-2">
+                        Change
+                      </button>
+                    </div>
+                  ) : (
+                    <Input
+                      type="email"
+                      placeholder="Email address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="h-11 bg-background mb-4"
+                      required
+                    />
+                  )}
 
                   <div className="space-y-4">
                     <Input
