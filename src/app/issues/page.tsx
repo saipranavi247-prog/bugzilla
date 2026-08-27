@@ -3,126 +3,67 @@ import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
+import { Plus, Filter, Search, TableProperties, KanbanSquare, Save } from "lucide-react"
+import { BugTable } from "@/components/bugs/shared/BugTable"
 import { Input } from "@/components/ui/input"
-import CreateIssueDialog from "./CreateIssueDialog"
 
-export default async function IssuesPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string; status?: string }>
-}) {
+export default async function IssuesPage() {
   const session = await auth()
-  if (!session?.user) {
-    redirect("/login")
-  }
-
-  const { q, status } = await searchParams
+  if (!session?.user) redirect("/login")
 
   const issues = await prisma.issue.findMany({
-    where: {
-      AND: [
-        q ? {
-          OR: [
-            { title: { contains: q } },
-            { issueKey: { contains: q } }
-          ]
-        } : {},
-        status ? { status } : {}
-      ]
-    },
+    orderBy: { updatedAt: 'desc' },
     include: {
       assignee: true,
       reporter: true,
       project: true,
+      _count: { select: { comments: true } }
     },
-    orderBy: { createdAt: "desc" }
-  })
-
-  const projects = await prisma.project.findMany({
-    include: {
-      components: true,
-      versions: true,
-      milestones: true
-    }
+    take: 50 // Pagination placeholder
   })
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Issues</h1>
-          <p className="text-gray-500">Manage and track software defects.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Issues</h1>
+          <p className="text-muted-foreground">View and manage all tracked bugs.</p>
         </div>
-        <CreateIssueDialog projects={projects} />
+        <Link href="/issues/new">
+          <Button className="bg-primary hover:bg-primary/90 text-white font-semibold">
+            <Plus className="mr-2 h-4 w-4" /> Report a Bug
+          </Button>
+        </Link>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <form className="flex items-center space-x-2 w-full max-w-sm">
-          <Input name="q" placeholder="Search issues..." defaultValue={q} />
-          <Button type="submit" variant="secondary">Search</Button>
-        </form>
+      {/* Toolbar */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-card p-4 rounded-xl border border-border">
+        <div className="flex flex-1 items-center space-x-2 w-full sm:w-auto">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Search issues..." className="pl-9 bg-background border-border" />
+          </div>
+          <Button variant="outline" size="sm" className="hidden sm:flex border-border text-muted-foreground">
+            <Filter className="mr-2 h-4 w-4" /> Filters
+          </Button>
+          <Button variant="ghost" size="sm" className="hidden md:flex text-muted-foreground hover:text-foreground">
+            <Save className="mr-2 h-4 w-4" /> Save View
+          </Button>
+        </div>
+        
+        <div className="flex items-center space-x-2 bg-background border border-border p-1 rounded-lg">
+          <Button variant="ghost" size="sm" className="bg-muted text-foreground px-3 h-7 rounded-md">
+            <TableProperties className="h-4 w-4 mr-2" /> Table
+          </Button>
+          <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground px-3 h-7 rounded-md">
+            <KanbanSquare className="h-4 w-4 mr-2" /> Kanban
+          </Button>
+        </div>
       </div>
 
-      <div className="rounded-md border bg-white">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Key</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Severity</TableHead>
-              <TableHead>Reporter</TableHead>
-              <TableHead>Assignee</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {issues.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center h-24 text-gray-500">
-                  No issues found.
-                </TableCell>
-              </TableRow>
-            ) : (
-              issues.map((issue) => (
-                <TableRow key={issue.id}>
-                  <TableCell className="font-medium">
-                    <Link href={`/issues/${issue.issueKey}`} className="text-blue-600 hover:underline">
-                      {issue.issueKey}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{issue.title}</TableCell>
-                  <TableCell>
-                    <Badge 
-                      className={
-                        issue.status === "RESOLVED" || issue.status === "VERIFIED" || issue.status === "CLOSED" 
-                          ? "bg-green-600 hover:bg-green-700 text-white" 
-                          : "bg-blue-600 hover:bg-blue-700 text-white"
-                      }
-                    >
-                      {issue.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge 
-                      className={
-                        issue.severity === "critical" 
-                          ? "bg-red-600 hover:bg-red-700 text-white" 
-                          : "bg-gray-600 hover:bg-gray-700 text-white"
-                      }
-                    >
-                      {issue.severity}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{issue.reporter.name}</TableCell>
-                  <TableCell>{issue.assignee?.name || "Unassigned"}</TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      {/* Table Data */}
+      <BugTable issues={issues} />
+      
     </div>
   )
 }
