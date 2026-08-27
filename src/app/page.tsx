@@ -27,10 +27,10 @@ export default async function Home() {
           <span className="font-bold text-2xl tracking-tight text-foreground">BugRadar</span>
         </div>
         <div className="ml-auto flex items-center space-x-4">
-          <Link href="/login" className="hidden sm:inline-block">
+          <Link href="/auth" className="hidden sm:inline-block">
             <Button variant="ghost" className="text-muted-foreground hover:text-foreground">Log in</Button>
           </Link>
-          <Link href="/login">
+          <Link href="/auth">
             <Button className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full">
               Get Started
             </Button>

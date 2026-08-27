@@ -35,7 +35,7 @@ export default function Hero() {
         </div>
         
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
-          <Link href="/login" className="w-full sm:w-auto">
+          <Link href="/auth" className="w-full sm:w-auto">
             <Button size="lg" className="w-full h-14 px-8 text-lg bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25 rounded-full transition-all hover:scale-105">
               Get Started
               <ArrowRight className="ml-2 h-5 w-5" />

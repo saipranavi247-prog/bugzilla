@@ -14,7 +14,7 @@ export default async function IssueDetailPage({
   params: Promise<{ issueKey: string }>
 }) {
   const session = await auth()
-  if (!session?.user) redirect("/login")
+  if (!session?.user) redirect("/auth")
 
   const { issueKey } = await params
 

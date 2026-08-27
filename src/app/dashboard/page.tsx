@@ -8,7 +8,7 @@ import { Calendar } from "lucide-react"
 export default async function DashboardPage() {
   const session = await auth()
   if (!session?.user) {
-    redirect("/login")
+    redirect("/auth")
   }
 
   const issues = await prisma.issue.findMany({

@@ -54,9 +54,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }
   },
   pages: {
-    signIn: "/login",
+    signIn: "/auth",
   },
   session: {
     strategy: "jwt"
-  }
+  },
+  secret: process.env.AUTH_SECRET || "super-secret-bugradar-key-1234567890"
 })

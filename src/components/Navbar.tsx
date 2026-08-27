@@ -27,7 +27,7 @@ export default async function Navbar() {
         <span className="text-sm text-gray-500">{session.user.email}</span>
         <form action={async () => {
           "use server"
-          await signOut({ redirectTo: "/login" })
+          await signOut({ redirectTo: "/auth" })
         }}>
           <Button variant="outline" size="sm" type="submit">Sign Out</Button>
         </form>

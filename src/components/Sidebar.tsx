@@ -42,7 +42,7 @@ export default async function Sidebar() {
         </div>
         <form action={async () => {
           "use server"
-          await signOut({ redirectTo: "/login" })
+          await signOut({ redirectTo: "/auth" })
         }}>
           <Button variant="secondary" className="w-full justify-start" type="submit">Sign Out</Button>
         </form>

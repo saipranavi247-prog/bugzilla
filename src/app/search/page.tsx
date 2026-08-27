@@ -7,7 +7,7 @@ import { Save, Download, X, Search as SearchIcon } from "lucide-react"
 
 export default async function SearchPage({ searchParams }: { searchParams: { q?: string, severity?: string } }) {
   const session = await auth()
-  if (!session?.user) redirect("/login")
+  if (!session?.user) redirect("/auth")
 
   const query = searchParams.q || ""
   

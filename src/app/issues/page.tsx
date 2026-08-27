@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 
 export default async function IssuesPage() {
   const session = await auth()
-  if (!session?.user) redirect("/login")
+  if (!session?.user) redirect("/auth")
 
   const issues = await prisma.issue.findMany({
     orderBy: { updatedAt: 'desc' },

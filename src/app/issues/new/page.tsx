@@ -7,7 +7,7 @@ import { Bug } from "lucide-react"
 export default async function ReportBugPage() {
   const session = await auth()
   if (!session?.user) {
-    redirect("/login")
+    redirect("/auth")
   }
 
   const projects = await prisma.project.findMany({
