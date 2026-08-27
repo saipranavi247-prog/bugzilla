@@ -34,6 +34,44 @@ model Project {
   
   issues      Issue[]
   workflows   WorkflowState[]
+  components  Component[]
+  versions    Version[]
+  milestones  Milestone[]
+}
+
+model Component {
+  id          String   @id @default(uuid())
+  projectId   String
+  name        String
+  description String?
+  
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  issues      Issue[]
+
+  @@unique([projectId, name])
+}
+
+model Version {
+  id          String   @id @default(uuid())
+  projectId   String
+  name        String
+  
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  issues      Issue[]
+
+  @@unique([projectId, name])
+}
+
+model Milestone {
+  id          String   @id @default(uuid())
+  projectId   String
+  name        String
+  dueDate     DateTime?
+  
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  issues      Issue[]
+
+  @@unique([projectId, name])
 }
 
 model WorkflowState {
@@ -41,7 +79,6 @@ model WorkflowState {
   projectId   String
   name        String
   description String?
-  // Store valid next states as JSON or comma separated. Using JSON string for sqlite compat.
   allowedTransitions String @default("[]") 
   isInitial   Boolean  @default(false)
   isTerminal  Boolean  @default(false)
@@ -54,22 +91,27 @@ model Issue {
   issueKey    String   @unique // e.g., "BUG-123"
   title       String
   description String
-  status      String   // Links to WorkflowState name conceptually
+  status      String   
   severity    String   @default("normal")
   priority    String   @default("medium")
-  version     String?
   environment String?
   
   reporterId  String
   assigneeId  String?
   projectId   String
+  componentId String?
+  versionId   String?
+  milestoneId String?
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  reporter    User     @relation("Reporter", fields: [reporterId], references: [id])
-  assignee    User?    @relation("Assignee", fields: [assigneeId], references: [id])
-  project     Project  @relation(fields: [projectId], references: [id])
+  reporter    User       @relation("Reporter", fields: [reporterId], references: [id])
+  assignee    User?      @relation("Assignee", fields: [assigneeId], references: [id])
+  project     Project    @relation(fields: [projectId], references: [id])
+  component   Component? @relation(fields: [componentId], references: [id])
+  version     Version?   @relation(fields: [versionId], references: [id])
+  milestone   Milestone? @relation(fields: [milestoneId], references: [id])
 
   comments    Comment[]
   auditLogs   AuditLog[]

@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
   const status = searchParams.get("status")
   const severity = searchParams.get("severity")
   const assigneeId = searchParams.get("assigneeId")
+  const componentId = searchParams.get("componentId")
 
   try {
     const issues = await prisma.issue.findMany({
@@ -27,13 +28,15 @@ export async function GET(req: NextRequest) {
           } : {},
           status ? { status } : {},
           severity ? { severity } : {},
-          assigneeId ? { assigneeId } : {}
+          assigneeId ? { assigneeId } : {},
+          componentId ? { componentId } : {}
         ]
       },
       include: {
         assignee: { select: { name: true, email: true } },
         reporter: { select: { name: true, email: true } },
-        project: { select: { key: true, name: true } }
+        project: { select: { key: true, name: true } },
+        component: { select: { name: true } }
       },
       orderBy: { createdAt: 'desc' }
     })
@@ -53,7 +56,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await req.json()
-    const { title, description, projectId, severity, priority, environment } = data
+    const { title, description, projectId, severity, priority, environment, componentId, versionId, milestoneId } = data
 
     // Generate Issue Key (mock logic: PROJECTKEY-COUNT)
     const project = await prisma.project.findUnique({
@@ -79,6 +82,9 @@ export async function POST(req: NextRequest) {
         description,
         issueKey,
         projectId,
+        componentId: componentId || null,
+        versionId: versionId || null,
+        milestoneId: milestoneId || null,
         severity: severity || "normal",
         priority: priority || "medium",
         environment,
@@ -93,7 +99,7 @@ export async function POST(req: NextRequest) {
         issueId: issue.id,
         userId: session.user.id as string,
         action: "CREATED",
-        changes: JSON.stringify({ status: issue.status, title, severity, priority })
+        changes: JSON.stringify({ status: issue.status, title, severity, priority, componentId })
       }
     })
 

@@ -23,6 +23,9 @@ export default async function IssueDetailPage({
     include: {
       assignee: true,
       reporter: true,
+      component: true,
+      version: true,
+      milestone: true,
       project: { include: { workflows: true } },
       comments: { include: { author: true }, orderBy: { createdAt: "asc" } },
       auditLogs: { include: { user: true }, orderBy: { createdAt: "desc" } }
@@ -73,6 +76,15 @@ export default async function IssueDetailPage({
               
               <span className="text-gray-500">Reporter</span>
               <span>{issue.reporter.name}</span>
+
+              <span className="text-gray-500">Component</span>
+              <span>{issue.component?.name || "None"}</span>
+
+              <span className="text-gray-500">Version</span>
+              <span>{issue.version?.name || "None"}</span>
+
+              <span className="text-gray-500">Milestone</span>
+              <span>{issue.milestone?.name || "None"}</span>
 
               <span className="text-gray-500">Severity</span>
               <span>{issue.severity}</span>

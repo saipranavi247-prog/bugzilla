@@ -48,8 +48,35 @@ async function main() {
     }
   })
 
-  await prisma.issue.create({
-    data: {
+  // Phase 7: Create Taxonomy
+  const component = await prisma.component.upsert({
+    where: { projectId_name: { projectId: project.id, name: 'Frontend' } },
+    update: {},
+    create: { projectId: project.id, name: 'Frontend', description: 'UI and React components' }
+  })
+
+  await prisma.component.upsert({
+    where: { projectId_name: { projectId: project.id, name: 'Backend' } },
+    update: {},
+    create: { projectId: project.id, name: 'Backend', description: 'API and Database' }
+  })
+
+  const version = await prisma.version.upsert({
+    where: { projectId_name: { projectId: project.id, name: 'v1.0' } },
+    update: {},
+    create: { projectId: project.id, name: 'v1.0' }
+  })
+
+  const milestone = await prisma.milestone.upsert({
+    where: { projectId_name: { projectId: project.id, name: 'Beta Release' } },
+    update: {},
+    create: { projectId: project.id, name: 'Beta Release', dueDate: new Date('2026-12-31') }
+  })
+
+  await prisma.issue.upsert({
+    where: { issueKey: 'CORE-1' },
+    update: {},
+    create: {
       issueKey: 'CORE-1',
       title: 'Initialize Next.js project with Tailwind',
       description: 'We need to set up the foundation of the project.',
@@ -58,12 +85,17 @@ async function main() {
       priority: 'high',
       reporterId: admin.id,
       assigneeId: dev.id,
-      projectId: project.id
+      projectId: project.id,
+      componentId: component.id,
+      versionId: version.id,
+      milestoneId: milestone.id
     }
   })
 
-  await prisma.issue.create({
-    data: {
+  await prisma.issue.upsert({
+    where: { issueKey: 'CORE-2' },
+    update: {},
+    create: {
       issueKey: 'CORE-2',
       title: 'Build Issue detail view',
       description: 'The issue detail view should include a rich Markdown description and comments.',
@@ -71,7 +103,8 @@ async function main() {
       severity: 'major',
       priority: 'critical',
       reporterId: dev.id,
-      projectId: project.id
+      projectId: project.id,
+      componentId: component.id
     }
   })
 

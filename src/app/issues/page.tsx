@@ -40,7 +40,13 @@ export default async function IssuesPage({
     orderBy: { createdAt: "desc" }
   })
 
-  const projects = await prisma.project.findMany()
+  const projects = await prisma.project.findMany({
+    include: {
+      components: true,
+      versions: true,
+      milestones: true
+    }
+  })
 
   return (
     <div className="space-y-6">

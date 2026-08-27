@@ -15,18 +15,34 @@ export default function CreateIssueDialog({ projects }: { projects: any[] }) {
     title: "",
     description: "",
     projectId: projects[0]?.id || "",
+    componentId: "none",
+    versionId: "none",
+    milestoneId: "none",
     severity: "normal",
     priority: "medium"
   })
 
+  // Derive available components, versions, milestones based on selected project
+  const selectedProject = projects.find(p => p.id === formData.projectId)
+  const components = selectedProject?.components || []
+  const versions = selectedProject?.versions || []
+  const milestones = selectedProject?.milestones || []
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    
+    // Convert "none" back to empty/null for API payload
+    const payload = { ...formData }
+    if (payload.componentId === "none") delete (payload as any).componentId
+    if (payload.versionId === "none") delete (payload as any).versionId
+    if (payload.milestoneId === "none") delete (payload as any).milestoneId
+
     try {
       const res = await fetch("/api/issues", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       })
       if (res.ok) {
         setOpen(false)
@@ -39,7 +55,6 @@ export default function CreateIssueDialog({ projects }: { projects: any[] }) {
 
   const handleAITriage = async () => {
     if (!formData.description) return
-    // Mock AI Triage - in reality this would call an API route that queries an LLM
     setFormData(prev => ({
       ...prev,
       severity: prev.description.toLowerCase().includes("crash") ? "critical" : "normal",
@@ -98,6 +113,39 @@ export default function CreateIssueDialog({ projects }: { projects: any[] }) {
                 required 
               />
             </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Component</label>
+                <Select value={formData.componentId} onValueChange={v => setFormData({...formData, componentId: v})}>
+                  <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None</SelectItem>
+                    {components.map((c: any) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Version</label>
+                <Select value={formData.versionId} onValueChange={v => setFormData({...formData, versionId: v})}>
+                  <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None</SelectItem>
+                    {versions.map((v: any) => <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Milestone</label>
+                <Select value={formData.milestoneId} onValueChange={v => setFormData({...formData, milestoneId: v})}>
+                  <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">None</SelectItem>
+                    {milestones.map((m: any) => <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Severity</label>
