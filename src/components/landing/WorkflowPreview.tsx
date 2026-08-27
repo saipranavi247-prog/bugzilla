@@ -25,18 +25,18 @@ export default function WorkflowPreview() {
           </p>
         </div>
 
-        <div className="relative p-8 md:p-12 rounded-3xl bg-card border border-border overflow-hidden">
+        <div className="relative p-6 md:p-12 rounded-3xl bg-card border border-border">
           {/* Animated Bug Card moving through states */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 relative z-10">
+          <div className="flex flex-row items-center justify-start md:justify-between gap-4 relative z-10 overflow-x-auto pb-6 -mb-6 hide-scrollbar">
             {WORKFLOW_STATES.map((state, index) => {
               const isActive = index === activeStateIndex
               const isPast = index < activeStateIndex
               
               return (
-                <div key={state} className="flex flex-col md:flex-row items-center w-full md:w-auto">
+                <div key={state} className="flex flex-row items-center shrink-0">
                   <div className={`
-                    flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all duration-500 min-w-[140px]
-                    ${isActive ? 'border-primary bg-primary/10 scale-110 shadow-lg shadow-primary/20' : 
+                    flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-500 min-w-[120px]
+                    ${isActive ? 'border-primary bg-primary/10 scale-105 shadow-lg shadow-primary/20' : 
                       isPast ? 'border-green-500/50 bg-green-500/5 text-muted-foreground' : 
                       'border-border bg-background text-muted-foreground'}
                   `}>
@@ -53,7 +53,7 @@ export default function WorkflowPreview() {
                   
                   {index < WORKFLOW_STATES.length - 1 && (
                     <ArrowRight className={`
-                      hidden md:block mx-4 h-6 w-6 transition-colors duration-500
+                      mx-2 md:mx-4 h-5 w-5 md:h-6 md:w-6 transition-colors duration-500 shrink-0
                       ${isActive ? 'text-primary' : isPast ? 'text-green-500' : 'text-muted-foreground/30'}
                     `} />
                   )}
