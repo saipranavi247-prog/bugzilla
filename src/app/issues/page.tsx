@@ -94,11 +94,27 @@ export default async function IssuesPage({
                   </TableCell>
                   <TableCell>{issue.title}</TableCell>
                   <TableCell>
-                    <Badge variant={issue.status === "CLOSED" ? "secondary" : "default"}>
+                    <Badge 
+                      className={
+                        issue.status === "RESOLVED" || issue.status === "VERIFIED" || issue.status === "CLOSED" 
+                          ? "bg-green-600 hover:bg-green-700 text-white" 
+                          : "bg-blue-600 hover:bg-blue-700 text-white"
+                      }
+                    >
                       {issue.status}
                     </Badge>
                   </TableCell>
-                  <TableCell>{issue.severity}</TableCell>
+                  <TableCell>
+                    <Badge 
+                      className={
+                        issue.severity === "critical" 
+                          ? "bg-red-600 hover:bg-red-700 text-white" 
+                          : "bg-gray-600 hover:bg-gray-700 text-white"
+                      }
+                    >
+                      {issue.severity}
+                    </Badge>
+                  </TableCell>
                   <TableCell>{issue.reporter.name}</TableCell>
                   <TableCell>{issue.assignee?.name || "Unassigned"}</TableCell>
                 </TableRow>

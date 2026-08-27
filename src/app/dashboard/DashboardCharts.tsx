@@ -2,7 +2,7 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis } from "recharts"
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#a855f7', '#ec4899'];
+const COLORS = ['#3B82F6', '#A855F7', '#06B6D4', '#2563EB', '#8B5CF6', '#0EA5E9'];
 
 export default function DashboardCharts({ statusData, severityData }: { statusData: any[], severityData: any[] }) {
   return (

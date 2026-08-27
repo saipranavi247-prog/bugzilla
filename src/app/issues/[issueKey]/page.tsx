@@ -47,7 +47,13 @@ export default async function IssueDetailPage({
         </div>
 
         <div className="flex items-center space-x-4">
-          <Badge variant="outline">{issue.status}</Badge>
+          <Badge className={
+            issue.status === "RESOLVED" || issue.status === "VERIFIED" || issue.status === "CLOSED" 
+              ? "bg-green-600 hover:bg-green-700 text-white border-transparent" 
+              : "bg-blue-600 hover:bg-blue-700 text-white border-transparent"
+          }>
+            {issue.status}
+          </Badge>
           <IssueActions issue={issue} currentUser={session.user as any} />
         </div>
 
@@ -87,7 +93,15 @@ export default async function IssueDetailPage({
               <span>{issue.milestone?.name || "None"}</span>
 
               <span className="text-gray-500">Severity</span>
-              <span>{issue.severity}</span>
+              <span>
+                <Badge className={
+                  issue.severity === "critical" 
+                    ? "bg-red-600 hover:bg-red-700 text-white border-transparent" 
+                    : "bg-gray-600 hover:bg-gray-700 text-white border-transparent"
+                }>
+                  {issue.severity}
+                </Badge>
+              </span>
 
               <span className="text-gray-500">Priority</span>
               <span>{issue.priority}</span>
