@@ -56,7 +56,39 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await req.json()
-    const { title, description, projectId, severity, priority, environment, componentId, versionId, milestoneId } = data
+    const { 
+      title, 
+      stepsToReproduce, 
+      expectedResult, 
+      actualResult, 
+      projectId, 
+      severity, 
+      priority, 
+      environment, 
+      componentId, 
+      versionId, 
+      milestoneId 
+    } = data
+
+    // Combine structured fields into a rich markdown description
+    let description = ""
+    if (stepsToReproduce && stepsToReproduce.length > 0) {
+      description += "### Steps to Reproduce\n"
+      stepsToReproduce.forEach((step: string, i: number) => {
+        description += `${i + 1}. ${step}\n`
+      })
+      description += "\n"
+    }
+    if (expectedResult) {
+      description += "### Expected Result\n" + expectedResult + "\n\n"
+    }
+    if (actualResult) {
+      description += "### Actual Result\n" + actualResult + "\n\n"
+    }
+    // Fallback if it was created from the old modal
+    if (data.description && !stepsToReproduce) {
+      description = data.description
+    }
 
     // Generate Issue Key (mock logic: PROJECTKEY-COUNT)
     const project = await prisma.project.findUnique({
@@ -82,12 +114,12 @@ export async function POST(req: NextRequest) {
         description,
         issueKey,
         projectId,
-        componentId: componentId || null,
-        versionId: versionId || null,
-        milestoneId: milestoneId || null,
+        componentId: componentId && componentId !== "none" ? componentId : null,
+        versionId: versionId && versionId !== "none" ? versionId : null,
+        milestoneId: milestoneId && milestoneId !== "none" ? milestoneId : null,
         severity: severity || "normal",
-        priority: priority || "medium",
-        environment,
+        priority: priority || "p2",
+        environment: environment || null,
         status: initialState?.name || "NEW",
         reporterId: session.user.id as string,
       }

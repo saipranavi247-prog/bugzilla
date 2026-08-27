@@ -26,6 +26,10 @@ export default async function Sidebar() {
           <List className="h-4 w-4" />
           <span>Issues</span>
         </Link>
+        <Link href="/issues/new" className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground font-medium text-sm transition-colors text-primary">
+          <Bug className="h-4 w-4" />
+          <span>Report a Bug</span>
+        </Link>
         <Link href="/projects" className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground font-medium text-sm transition-colors">
           <Folder className="h-4 w-4" />
           <span>Projects</span>
