@@ -11,7 +11,7 @@ export default async function Navbar() {
     <nav className="flex items-center justify-between p-4 border-b bg-white">
       <div className="flex items-center space-x-6">
         <Link href="/" className="text-xl font-bold text-blue-600">
-          Bugzilla
+          BugRadar
         </Link>
         <Link href="/projects" className="text-sm font-medium hover:text-blue-600">
           Projects

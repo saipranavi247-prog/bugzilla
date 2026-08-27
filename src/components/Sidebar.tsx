@@ -13,7 +13,7 @@ export default async function Sidebar() {
       <div className="p-6">
         <Link href="/" className="flex items-center space-x-2 font-bold text-2xl text-primary">
           <Bug className="h-6 w-6" />
-          <span>Bugzilla</span>
+          <span>BugRadar</span>
         </Link>
       </div>
 
