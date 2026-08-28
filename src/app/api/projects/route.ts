@@ -33,16 +33,18 @@ export async function POST(req: Request) {
     })
 
     // Seed default workflow states for this project
-    await prisma.workflowState.createMany({
-      data: [
-        { name: "NEW", projectId: project.id, isInitial: true, isFinal: false, color: "blue", order: 0 },
-        { name: "ASSIGNED", projectId: project.id, isInitial: false, isFinal: false, color: "purple", order: 1 },
-        { name: "IN PROGRESS", projectId: project.id, isInitial: false, isFinal: false, color: "yellow", order: 2 },
-        { name: "RESOLVED", projectId: project.id, isInitial: false, isFinal: true, color: "green", order: 3 },
-        { name: "VERIFIED", projectId: project.id, isInitial: false, isFinal: true, color: "green", order: 4 },
-        { name: "CLOSED", projectId: project.id, isInitial: false, isFinal: true, color: "gray", order: 5 },
-      ]
-    })
+    const defaultStates = [
+      { name: "NEW", projectId: project.id, isInitial: true, isTerminal: false },
+      { name: "ASSIGNED", projectId: project.id, isInitial: false, isTerminal: false },
+      { name: "IN PROGRESS", projectId: project.id, isInitial: false, isTerminal: false },
+      { name: "IN REVIEW", projectId: project.id, isInitial: false, isTerminal: false },
+      { name: "RESOLVED", projectId: project.id, isInitial: false, isTerminal: true },
+      { name: "CLOSED", projectId: project.id, isInitial: false, isTerminal: true },
+    ]
+
+    await Promise.all(defaultStates.map(state => 
+      prisma.workflowState.create({ data: state })
+    ))
 
     return NextResponse.json(project, { status: 201 })
   } catch (error) {

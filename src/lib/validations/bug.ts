@@ -10,8 +10,8 @@ export const bugFormSchema = z.object({
   expectedResult: z.string().min(5, "Expected result is required"),
   actualResult: z.string().min(5, "Actual result is required"),
   
-  severity: z.enum(["blocker", "critical", "major", "normal", "minor", "trivial"]).default("normal"),
-  priority: z.enum(["p0", "p1", "p2", "p3", "p4"]).default("p2"),
+  severity: z.enum(["blocker", "critical", "major", "normal", "minor", "trivial"]),
+  priority: z.enum(["p0", "p1", "p2", "p3", "p4"]),
   
   environment: z.string().optional(),
   

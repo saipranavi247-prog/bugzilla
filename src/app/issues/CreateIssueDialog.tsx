@@ -65,8 +65,8 @@ export default function CreateIssueDialog({ projects }: { projects: any[] }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>New Issue</Button>
+      <DialogTrigger render={<Button />}>
+        New Issue
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <form onSubmit={handleSubmit}>
@@ -116,7 +116,7 @@ export default function CreateIssueDialog({ projects }: { projects: any[] }) {
             <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Component</label>
-                <Select value={formData.componentId} onValueChange={v => setFormData({...formData, componentId: v})}>
+                <Select value={formData.componentId} onValueChange={v => setFormData({...formData, componentId: v as string})}>
                   <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">None</SelectItem>
@@ -126,7 +126,7 @@ export default function CreateIssueDialog({ projects }: { projects: any[] }) {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Version</label>
-                <Select value={formData.versionId} onValueChange={v => setFormData({...formData, versionId: v})}>
+                <Select value={formData.versionId} onValueChange={v => setFormData({...formData, versionId: v as string})}>
                   <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">None</SelectItem>
@@ -136,7 +136,7 @@ export default function CreateIssueDialog({ projects }: { projects: any[] }) {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Milestone</label>
-                <Select value={formData.milestoneId} onValueChange={v => setFormData({...formData, milestoneId: v})}>
+                <Select value={formData.milestoneId} onValueChange={v => setFormData({...formData, milestoneId: v as string})}>
                   <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">None</SelectItem>
@@ -149,7 +149,7 @@ export default function CreateIssueDialog({ projects }: { projects: any[] }) {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Severity</label>
-                <Select value={formData.severity} onValueChange={v => setFormData({...formData, severity: v})}>
+                <Select value={formData.severity} onValueChange={v => setFormData({...formData, severity: v as string})}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="minor">Minor</SelectItem>
@@ -161,7 +161,7 @@ export default function CreateIssueDialog({ projects }: { projects: any[] }) {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Priority</label>
-                <Select value={formData.priority} onValueChange={v => setFormData({...formData, priority: v})}>
+                <Select value={formData.priority} onValueChange={v => setFormData({...formData, priority: v as string})}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="low">Low</SelectItem>

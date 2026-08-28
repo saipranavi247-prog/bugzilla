@@ -8,7 +8,8 @@ import { Plus, X } from "lucide-react"
 export default function StepsInput({ control }: { control: Control<BugFormValues> }) {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "stepsToReproduce" as const
+    // @ts-ignore - RHF types restrict useFieldArray to arrays of objects, but it works with primitives in simple cases
+    name: "stepsToReproduce",
   })
 
   return (

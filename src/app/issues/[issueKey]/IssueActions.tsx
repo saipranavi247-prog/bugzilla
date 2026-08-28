@@ -42,10 +42,8 @@ export default function IssueActions({ issue, currentUser }: { issue: any, curre
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" disabled={loading}>
-          {loading ? "Updating..." : "Transition State"}
-        </Button>
+      <DropdownMenuTrigger render={<Button variant="outline" size="sm" disabled={loading} />}>
+        {loading ? "Updating..." : "Transition State"}
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {allowedTransitions.map(status => (

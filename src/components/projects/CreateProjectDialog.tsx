@@ -46,10 +46,8 @@ export function CreateProjectDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-primary hover:bg-primary/90 text-white font-semibold">
-          Create Project
-        </Button>
+      <DialogTrigger render={<Button className="bg-primary hover:bg-primary/90 text-white font-semibold" />}>
+        Create Project
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-card border-border">
         <DialogHeader>

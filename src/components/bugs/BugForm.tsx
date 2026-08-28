@@ -129,7 +129,7 @@ export default function BugForm({ projects }: { projects: any[] }) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
             <label className="text-sm font-medium">Product</label>
-            <Select onValueChange={v => setValue("projectId", v)} defaultValue={watch("projectId")}>
+            <Select onValueChange={v => setValue("projectId", v as string)} defaultValue={watch("projectId")}>
               <SelectTrigger><SelectValue placeholder="Select Product" /></SelectTrigger>
               <SelectContent>
                 {projects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
@@ -140,7 +140,7 @@ export default function BugForm({ projects }: { projects: any[] }) {
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Component</label>
-            <Select onValueChange={v => setValue("componentId", v)}>
+            <Select onValueChange={v => setValue("componentId", v as string)}>
               <SelectTrigger><SelectValue placeholder="Select Component" /></SelectTrigger>
               <SelectContent>
                 {components.map((c: any) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
@@ -150,7 +150,7 @@ export default function BugForm({ projects }: { projects: any[] }) {
 
           <div className="space-y-2">
             <label className="text-sm font-medium">Affected Version</label>
-            <Select onValueChange={v => setValue("versionId", v)}>
+            <Select onValueChange={v => setValue("versionId", v as string)}>
               <SelectTrigger><SelectValue placeholder="Select Version" /></SelectTrigger>
               <SelectContent>
                 {versions.map((v: any) => <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>)}
