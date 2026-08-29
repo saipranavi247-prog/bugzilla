@@ -1,22 +1,30 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
-import CommandPalette from "@/components/CommandPalette";
+import Navbar from "@/components/Navbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  variable: "--font-ibm-plex-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Bugzilla (Modern)",
-  description: "A modern reinterpretation of Bugzilla",
+  title: "BugRadar — Cyber Detective HQ",
+  description: "Every Bug Leaves a Trace. AI-powered collaborative bug tracking and investigation workspace.",
 };
 
 export default function RootLayout({
@@ -27,13 +35,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen flex`}
+        className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable} antialiased bg-[#050816] text-[#F8FAFC] min-h-screen flex flex-col`}
       >
-        <Sidebar />
-        <CommandPalette />
-        <main className="flex-1 p-8 overflow-y-auto h-screen">
-          {children}
-        </main>
+        <Navbar />
+        <div className="flex flex-1 overflow-hidden h-[calc(100vh-64px)]">
+          <Sidebar />
+          <main className="flex-1 overflow-y-auto cyber-grid">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );
