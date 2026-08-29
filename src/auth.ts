@@ -130,5 +130,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: "jwt"
   },
+  trustHost: true,
   secret: process.env.AUTH_SECRET || "super-secret-bugradar-key-1234567890"
 })
