@@ -25,11 +25,34 @@
   --color-text-muted:     #4A5568;
 }
 
+/* ─── Themes ─── */
+:root, [data-theme="night"] {
+  --bg-primary: #050816;
+  --bg-secondary: #0D1324;
+  --bg-card: linear-gradient(135deg, #0D1324 0%, #121A2E 100%);
+  --grid-color: rgba(52, 225, 255, 0.03);
+  --border: #1E2D4A;
+}
+
+[data-theme="blueprint"] {
+  --bg-primary: #001e36;
+  --bg-secondary: #002b4d;
+  --bg-card: linear-gradient(135deg, #002b4d 0%, #004080 100%);
+  --grid-color: rgba(255, 255, 255, 0.08);
+  --border: #34E1FF40;
+}
+
+[data-theme="neon"] {
+  --bg-primary: #0a0014;
+  --bg-secondary: #1a0033;
+  --bg-card: linear-gradient(135deg, #1a0033 0%, #330066 100%);
+  --grid-color: rgba(255, 90, 95, 0.05);
+  --border: #8B5CF660;
+}
+
 /* ─── Base ─── */
 :root {
-  --background: #050816;
   --foreground: #F8FAFC;
-  --border: #1E2D4A;
   --radius: 0.75rem;
 }
 
@@ -45,7 +68,7 @@
   }
   html { scroll-behavior: smooth; }
   body {
-    background-color: #050816;
+    background-color: var(--bg-primary);
     color: #F8FAFC;
     font-family: var(--font-inter), system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -60,18 +83,18 @@
 
 /* ─── Blueprint Grid Background ─── */
 @utility cyber-grid {
-  background-color: #050816;
+  background-color: var(--bg-primary);
   background-image:
-    linear-gradient(rgba(52, 225, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(52, 225, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
 @utility cyber-grid-dense {
-  background-color: #0D1324;
+  background-color: var(--bg-secondary);
   background-image:
-    linear-gradient(rgba(52, 225, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(52, 225, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
@@ -94,8 +117,8 @@
 
 /* ─── Holographic Card ─── */
 @utility holo-card {
-  background: linear-gradient(135deg, #0D1324 0%, #121A2E 100%);
-  border: 1px solid #1E2D4A;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 16px;
   position: relative;
   overflow: hidden;

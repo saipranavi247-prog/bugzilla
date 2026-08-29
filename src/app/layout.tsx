@@ -3,6 +3,9 @@ import { Space_Grotesk, Inter, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Navbar from "@/components/Navbar";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { ToastProvider } from "@/components/ToastProvider";
+import CommandPalette from "@/components/CommandPalette";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -35,15 +38,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable} antialiased bg-[#050816] text-[#F8FAFC] min-h-screen flex flex-col`}
+        className={`${spaceGrotesk.variable} ${inter.variable} ${ibmPlexMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        <Navbar />
-        <div className="flex flex-1 overflow-hidden h-[calc(100vh-64px)]">
-          <Sidebar />
-          <main className="flex-1 overflow-y-auto cyber-grid">
-            {children}
-          </main>
-        </div>
+        <ThemeProvider>
+          <ToastProvider>
+            <Navbar />
+            <div className="flex flex-1 overflow-hidden h-[calc(100vh-64px)]">
+              <Sidebar />
+              <main className="flex-1 overflow-y-auto cyber-grid">
+                {children}
+              </main>
+            </div>
+            <CommandPalette />
+          </ToastProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

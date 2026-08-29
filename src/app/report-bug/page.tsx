@@ -10,13 +10,19 @@ export default async function ReportBugPage() {
     redirect("/auth")
   }
 
-  const projects = await prisma.project.findMany({
-    include: {
-      components: true,
-      versions: true,
-      milestones: true
-    }
-  })
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let projects: any[] = []
+  try {
+    projects = await prisma.project.findMany({
+      include: {
+        components: true,
+        versions: true,
+        milestones: true
+      }
+    })
+  } catch (error) {
+    console.error("Failed to fetch projects for BugForm:", error)
+  }
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-12">

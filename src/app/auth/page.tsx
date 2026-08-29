@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { Eye, EyeOff, Fingerprint, GitFork, Zap, Loader2 } from "lucide-react"
 import { getFirebaseAuth, createGithubProvider, GithubAuthProvider } from "@/lib/firebase-client"
 import { signInWithPopup } from "firebase/auth"
@@ -94,6 +95,13 @@ export default function AuthPage() {
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 h-80 w-80 bg-[#34E1FF]/4 rounded-full blur-[120px]" />
         <div className="absolute bottom-1/4 right-1/4 h-80 w-80 bg-[#8B5CF6]/4 rounded-full blur-[120px]" />
+      </div>
+
+      {/* Back Button */}
+      <div className="absolute top-6 left-6 z-50">
+        <Link href="/" className="flex items-center space-x-2 bg-[#121A2E] border border-[#1E2D4A] hover:border-[#34E1FF]/30 text-[#94A3B8] hover:text-[#34E1FF] px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-[0_0_15px_rgba(0,0,0,0.3)]">
+          <span>← Back</span>
+        </Link>
       </div>
 
       {/* Left panel: branding + particles */}

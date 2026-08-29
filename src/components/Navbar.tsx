@@ -1,11 +1,10 @@
-"use client"
-
-import { useState } from "react"
 import Link from "next/link"
-import { Search, Bell, Zap, ChevronDown, Terminal, Wifi } from "lucide-react"
+import { Bell, Zap, Terminal, Wifi } from "lucide-react"
+import { auth } from "@/auth"
+import SearchButton from "./SearchButton"
 
-export default function Navbar() {
-  const [searchOpen, setSearchOpen] = useState(false)
+export default async function Navbar() {
+  const session = await auth()
 
   return (
     <header className="h-16 bg-[#0D1324]/90 backdrop-blur-xl border-b border-[#1E2D4A] flex items-center px-6 gap-4 z-50 relative shrink-0">
@@ -26,60 +25,60 @@ export default function Navbar() {
       {/* Divider */}
       <div className="h-5 w-px bg-[#1E2D4A] shrink-0" />
 
-      {/* Center: Search */}
-      <button
-        onClick={() => setSearchOpen(true)}
-        className="flex-1 max-w-xs flex items-center space-x-3 bg-[#121A2E] border border-[#1E2D4A] hover:border-[#34E1FF]/30 rounded-xl px-4 py-2 text-sm text-[#4A5568] hover:text-[#94A3B8] transition-all group"
-      >
-        <Search className="h-3.5 w-3.5 shrink-0 text-[#34E1FF]/40 group-hover:text-[#34E1FF]/70" />
-        <span>Search sketchnotes, bug IDs, tags…</span>
-        <div className="ml-auto flex items-center space-x-1">
-          <kbd className="font-mono text-[9px] bg-[#050816] border border-[#1E2D4A] text-[#94A3B8] px-1.5 py-0.5 rounded">⌘</kbd>
-          <kbd className="font-mono text-[9px] bg-[#050816] border border-[#1E2D4A] text-[#94A3B8] px-1.5 py-0.5 rounded">K</kbd>
-        </div>
-      </button>
+      {/* Center: Search (Client Component) */}
+      <SearchButton />
 
       {/* Right actions */}
       <div className="ml-auto flex items-center space-x-3">
-        
-        {/* New Bug button */}
-        <Link
-          href="/report-bug"
-          className="flex items-center space-x-2 bg-[#FFD54A] hover:bg-[#FFE07A] text-[#050816] font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-[0_0_20px_rgba(255,213,74,0.3)] hover:shadow-[0_0_30px_rgba(255,213,74,0.5)] hover:scale-[1.02]"
-        >
-          <Zap className="h-3.5 w-3.5 stroke-[3]" />
-          <span>+ New Case</span>
-        </Link>
+        {session?.user ? (
+          <>
+            {/* New Bug button */}
+            <Link
+              href="/report-bug"
+              className="flex items-center space-x-2 bg-[#FFD54A] hover:bg-[#FFE07A] text-[#050816] font-bold text-xs px-4 py-2 rounded-xl transition-all shadow-[0_0_20px_rgba(255,213,74,0.3)] hover:shadow-[0_0_30px_rgba(255,213,74,0.5)] hover:scale-[1.02]"
+            >
+              <Zap className="h-3.5 w-3.5 stroke-[3]" />
+              <span className="hidden sm:inline">+ New Case</span>
+            </Link>
 
-        {/* Terminal icon */}
-        <button className="h-8 w-8 rounded-lg bg-[#121A2E] border border-[#1E2D4A] hover:border-[#34E1FF]/30 flex items-center justify-center text-[#94A3B8] hover:text-[#34E1FF] transition-all">
-          <Terminal className="h-3.5 w-3.5" />
-        </button>
+            {/* Terminal icon */}
+            <button className="h-8 w-8 rounded-lg bg-[#121A2E] border border-[#1E2D4A] hover:border-[#34E1FF]/30 flex items-center justify-center text-[#94A3B8] hover:text-[#34E1FF] transition-all">
+              <Terminal className="h-3.5 w-3.5" />
+            </button>
 
-        {/* Live sync status */}
-        <div className="flex items-center space-x-1.5 bg-[#121A2E] border border-[#1E2D4A] rounded-xl px-3 py-1.5">
-          <Wifi className="h-3 w-3 text-[#36F097]" />
-          <span className="font-mono text-[9px] text-[#36F097]">LIVE</span>
-        </div>
+            {/* Live sync status */}
+            <div className="hidden md:flex items-center space-x-1.5 bg-[#121A2E] border border-[#1E2D4A] rounded-xl px-3 py-1.5">
+              <Wifi className="h-3 w-3 text-[#36F097]" />
+              <span className="font-mono text-[9px] text-[#36F097]">LIVE</span>
+            </div>
 
-        {/* Notifications */}
-        <button className="relative h-8 w-8 rounded-lg bg-[#121A2E] border border-[#1E2D4A] hover:border-[#FFD54A]/30 flex items-center justify-center text-[#94A3B8] hover:text-[#FFD54A] transition-all">
-          <Bell className="h-3.5 w-3.5" />
-          <span className="absolute -top-1 -right-1 h-4 w-4 bg-[#FF5A5F] rounded-full text-white font-mono text-[8px] flex items-center justify-center border border-[#050816]">3</span>
-        </button>
+            {/* Notifications */}
+            <button className="relative h-8 w-8 rounded-lg bg-[#121A2E] border border-[#1E2D4A] hover:border-[#FFD54A]/30 flex items-center justify-center text-[#94A3B8] hover:text-[#FFD54A] transition-all">
+              <Bell className="h-3.5 w-3.5" />
+              <span className="absolute -top-1 -right-1 h-4 w-4 bg-[#FF5A5F] rounded-full text-white font-mono text-[8px] flex items-center justify-center border border-[#050816]">3</span>
+            </button>
 
-        {/* Profile chip */}
-        <button className="flex items-center space-x-2.5 bg-gradient-to-r from-[#121A2E] to-[#0D1324] border border-[#1E2D4A] hover:border-[#FFD54A]/40 rounded-xl px-3 py-1.5 transition-all group">
-          <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-[#FF5A5F] to-[#8B5CF6] flex items-center justify-center text-white font-bold text-xs shadow-[0_0_10px_rgba(255,90,95,0.4)]">
-            T
-          </div>
-          <div className="text-left hidden sm:block">
-            <div className="font-sans font-bold text-xs text-[#F8FAFC] leading-none">Triveni</div>
-          </div>
-          <div className="h-1.5 w-1.5 rounded-full bg-[#36F097] shadow-[0_0_6px_rgba(54,240,151,0.8)]" />
-          <ChevronDown className="h-3 w-3 text-[#94A3B8] group-hover:text-[#FFD54A] transition-colors" />
-        </button>
-
+            {/* Profile chip */}
+            <Link href="/profile" className="flex items-center space-x-2.5 bg-gradient-to-r from-[#121A2E] to-[#0D1324] border border-[#1E2D4A] hover:border-[#FFD54A]/40 rounded-xl px-3 py-1.5 transition-all group cursor-pointer">
+              <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-[#FF5A5F] to-[#8B5CF6] flex items-center justify-center text-white font-bold text-xs shadow-[0_0_10px_rgba(255,90,95,0.4)] uppercase">
+                {session.user.name ? session.user.name[0] : "D"}
+              </div>
+              <div className="text-left hidden sm:block">
+                <div className="font-sans font-bold text-xs text-[#F8FAFC] leading-none group-hover:text-[#FFD54A] transition-colors">
+                  {session.user.name || "Detective"}
+                </div>
+              </div>
+              <div className="h-1.5 w-1.5 rounded-full bg-[#36F097] shadow-[0_0_6px_rgba(54,240,151,0.8)]" />
+            </Link>
+          </>
+        ) : (
+          <Link
+            href="/auth"
+            className="flex items-center space-x-2 bg-[#34E1FF]/10 border border-[#34E1FF]/30 hover:border-[#34E1FF]/60 text-[#34E1FF] font-bold text-xs px-5 py-2 rounded-xl transition-all hover:shadow-[0_0_20px_rgba(52,225,255,0.2)]"
+          >
+            Access Desk →
+          </Link>
+        )}
       </div>
     </header>
   )

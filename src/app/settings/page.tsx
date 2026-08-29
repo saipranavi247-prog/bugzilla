@@ -1,12 +1,12 @@
 "use client"
-
 import { useState } from "react"
 import { GitFork, MessageSquare, Code2, Flame, Bell, Moon, Zap, Shield, Key, Keyboard } from "lucide-react"
+import { useTheme } from "@/components/ThemeProvider"
 
 type NotifKey = "critical" | "sprint" | "team" | "ai" | "weekly"
 
 export default function SettingsPage() {
-  const [theme, setTheme] = useState<"night" | "blueprint" | "neon">("night")
+  const { theme, setTheme } = useTheme()
   const [notifs, setNotifs] = useState<Record<NotifKey, boolean>>({ critical: true, sprint: true, team: true, ai: false, weekly: true })
 
   const toggleNotif = (k: NotifKey) => setNotifs(p => ({ ...p, [k]: !p[k] }))
