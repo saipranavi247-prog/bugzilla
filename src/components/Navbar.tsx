@@ -70,7 +70,7 @@ export default async function Navbar() {
               </div>
               <div className="text-left hidden sm:block">
                 <div className="font-sans font-bold text-xs text-[#F8FAFC] leading-none group-hover:text-[#FFD54A] transition-colors">
-                  {session.user.name || "Detective"}
+                  Profile
                 </div>
               </div>
               <div className="h-1.5 w-1.5 rounded-full bg-[#36F097] shadow-[0_0_6px_rgba(54,240,151,0.8)]" />

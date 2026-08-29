@@ -22,8 +22,8 @@ export default function UserMenu({ session }: UserMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const userName = session?.user?.name || "Triveni Reddy"
-  const userEmail = session?.user?.email || "trivenib238@gmail.com"
+  const userName = session?.user?.name || "Detective"
+  const userEmail = session?.user?.email || "detective@bugradar.dev"
   const userInitial = userName.charAt(0).toUpperCase()
 
   // Close when clicking outside
@@ -61,7 +61,7 @@ export default function UserMenu({ session }: UserMenuProps) {
           
           {/* Pinned tape strip at top */}
           <div className="absolute top-[-10px] left-1/3 right-1/3 h-5 tape-strip flex items-center justify-center rotate-1 select-none pointer-events-none">
-            <span className="font-mono text-[8px] text-gray-500 font-semibold">Triveni Session</span>
+            <span className="font-mono text-[8px] text-gray-500 font-semibold">Active Session</span>
           </div>
 
           <div className="flex flex-col items-center border-b border-black/10 pb-4 mb-4 mt-2">
