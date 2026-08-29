@@ -4,7 +4,12 @@ import { auth } from "@/auth"
 import SearchButton from "./SearchButton"
 
 export default async function Navbar() {
-  const session = await auth()
+  let session = null
+  try {
+    session = await auth()
+  } catch (e) {
+    console.error("Navbar auth error:", e)
+  }
 
   return (
     <header className="h-16 bg-[#0D1324]/90 backdrop-blur-xl border-b border-[#1E2D4A] flex items-center px-6 gap-4 z-50 relative shrink-0">
