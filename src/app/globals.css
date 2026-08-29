@@ -3,95 +3,391 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), var(--font-geist-mono), monospace;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+
+  /* Cyber Detective Color System */
+  --color-cyber-bg:       #050816;
+  --color-cyber-surface:  #0D1324;
+  --color-cyber-elevated: #121A2E;
+  --color-cyber-border:   #1E2D4A;
+
+  --color-accent-yellow:  #FFD54A;
+  --color-accent-cyan:    #34E1FF;
+  --color-accent-purple:  #8B5CF6;
+  --color-accent-green:   #36F097;
+  --color-accent-red:     #FF5A5F;
+  --color-accent-orange:  #FFA726;
+
+  --color-text-primary:   #F8FAFC;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted:     #4A5568;
 }
 
+/* ─── Base ─── */
 :root {
-  /* Dashboard background: Dark Navy (#0f172a) */
-  --background: oklch(0.21 0.034 264.665);
-  --foreground: oklch(0.985 0 0);
-  
-  /* Cards: Slate Navy (#1e293b) */
-  --card: oklch(0.278 0.033 256.848);
-  --card-foreground: oklch(0.985 0 0);
-  
-  --popover: oklch(0.278 0.033 256.848);
-  --popover-foreground: oklch(0.985 0 0);
-  
-  /* Electric Blue for active/buttons (#3b82f6) */
-  --primary: oklch(0.623 0.214 259.815);
-  --primary-foreground: oklch(0.985 0 0);
-  
-  --secondary: oklch(0.278 0.033 256.848);
-  --secondary-foreground: oklch(0.985 0 0);
-  
-  --muted: oklch(0.278 0.033 256.848);
-  --muted-foreground: oklch(0.708 0 0);
-  
-  --accent: oklch(0.278 0.033 256.848);
-  --accent-foreground: oklch(0.985 0 0);
-  
-  /* Destructive */
-  --destructive: oklch(0.637 0.237 25.331);
-  --destructive-foreground: oklch(0.985 0 0);
-  
-  --border: oklch(0.3 0.03 256);
-  --input: oklch(0.3 0.03 256);
-  --ring: oklch(0.623 0.214 259.815);
-  
-  --radius: 0.625rem;
-
-  /* Sidebar: Deep Navy (#020617) */
-  --sidebar: oklch(0.13 0.028 261.692);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.623 0.214 259.815);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.278 0.033 256.848);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.2 0.03 256);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --background: #050816;
+  --foreground: #F8FAFC;
+  --border: #1E2D4A;
+  --radius: 0.75rem;
 }
 
 @layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
   * {
-    @apply border-border outline-ring/50;
+    border-color: #1E2D4A;
+    outline-color: rgba(52, 225, 255, 0.5);
+    scrollbar-width: thin;
+    scrollbar-color: #1E2D4A #050816;
   }
+  html { scroll-behavior: smooth; }
   body {
-    @apply bg-background text-foreground;
+    background-color: #050816;
+    color: #F8FAFC;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: #050816; }
+  ::-webkit-scrollbar-thumb { background: #1E2D4A; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: #34E1FF44; }
+}
+
+/* ─── Blueprint Grid Background ─── */
+@utility cyber-grid {
+  background-color: #050816;
+  background-image:
+    linear-gradient(rgba(52, 225, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(52, 225, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@utility cyber-grid-dense {
+  background-color: #0D1324;
+  background-image:
+    linear-gradient(rgba(52, 225, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(52, 225, 255, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* ─── Glow Utilities ─── */
+@utility glow-yellow {
+  box-shadow: 0 0 20px rgba(255, 213, 74, 0.3), 0 0 60px rgba(255, 213, 74, 0.1);
+}
+@utility glow-cyan {
+  box-shadow: 0 0 20px rgba(52, 225, 255, 0.3), 0 0 60px rgba(52, 225, 255, 0.1);
+}
+@utility glow-purple {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 60px rgba(139, 92, 246, 0.1);
+}
+@utility glow-red {
+  box-shadow: 0 0 20px rgba(255, 90, 95, 0.4), 0 0 60px rgba(255, 90, 95, 0.15);
+}
+@utility glow-green {
+  box-shadow: 0 0 20px rgba(54, 240, 151, 0.3), 0 0 60px rgba(54, 240, 151, 0.1);
+}
+
+/* ─── Holographic Card ─── */
+@utility holo-card {
+  background: linear-gradient(135deg, #0D1324 0%, #121A2E 100%);
+  border: 1px solid #1E2D4A;
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+@utility holo-card-cyan {
+  background: linear-gradient(135deg, #0D1324 0%, #0a1a24 100%);
+  border: 1px solid rgba(52, 225, 255, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 0 0 1px rgba(52, 225, 255, 0.05) inset, 0 4px 24px rgba(52, 225, 255, 0.08);
+}
+@utility holo-card-yellow {
+  background: linear-gradient(135deg, #0D1324 0%, #1a1508 100%);
+  border: 1px solid rgba(255, 213, 74, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 0 0 1px rgba(255, 213, 74, 0.05) inset, 0 4px 24px rgba(255, 213, 74, 0.08);
+}
+@utility holo-card-purple {
+  background: linear-gradient(135deg, #0D1324 0%, #14102a 100%);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.05) inset, 0 4px 24px rgba(139, 92, 246, 0.08);
+}
+@utility holo-card-red {
+  background: linear-gradient(135deg, #0D1324 0%, #1a0d0e 100%);
+  border: 1px solid rgba(255, 90, 95, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 0 0 1px rgba(255, 90, 95, 0.05) inset, 0 4px 24px rgba(255, 90, 95, 0.1);
+}
+
+/* ─── Neon Text ─── */
+@utility neon-yellow {
+  color: #FFD54A;
+  text-shadow: 0 0 10px rgba(255, 213, 74, 0.6), 0 0 30px rgba(255, 213, 74, 0.3);
+}
+@utility neon-cyan {
+  color: #34E1FF;
+  text-shadow: 0 0 10px rgba(52, 225, 255, 0.6), 0 0 30px rgba(52, 225, 255, 0.3);
+}
+@utility neon-green {
+  color: #36F097;
+  text-shadow: 0 0 10px rgba(54, 240, 151, 0.6), 0 0 30px rgba(54, 240, 151, 0.3);
+}
+@utility neon-red {
+  color: #FF5A5F;
+  text-shadow: 0 0 10px rgba(255, 90, 95, 0.6), 0 0 30px rgba(255, 90, 95, 0.3);
+}
+
+/* ─── Cyber Button ─── */
+@utility btn-cyber-yellow {
+  background: linear-gradient(135deg, #FFD54A, #F59E0B);
+  color: #050816;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 20px rgba(255, 213, 74, 0.3);
+}
+@utility btn-cyber-cyan {
+  background: transparent;
+  color: #34E1FF;
+  font-weight: 700;
+  border: 1px solid rgba(52, 225, 255, 0.4);
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 15px rgba(52, 225, 255, 0.1);
+}
+@utility btn-cyber-ghost {
+  background: rgba(30, 45, 74, 0.4);
+  color: #94A3B8;
+  font-weight: 600;
+  border: 1px solid #1E2D4A;
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* ─── Severity / Priority Badges ─── */
+@utility badge-critical {
+  background: rgba(255, 90, 95, 0.15);
+  color: #FF5A5F;
+  border: 1px solid rgba(255, 90, 95, 0.3);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: var(--font-ibm-plex-mono), monospace;
+}
+@utility badge-warning {
+  background: rgba(255, 167, 38, 0.15);
+  color: #FFA726;
+  border: 1px solid rgba(255, 167, 38, 0.3);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: var(--font-ibm-plex-mono), monospace;
+}
+@utility badge-success {
+  background: rgba(54, 240, 151, 0.12);
+  color: #36F097;
+  border: 1px solid rgba(54, 240, 151, 0.3);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: var(--font-ibm-plex-mono), monospace;
+}
+@utility badge-info {
+  background: rgba(52, 225, 255, 0.12);
+  color: #34E1FF;
+  border: 1px solid rgba(52, 225, 255, 0.3);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: var(--font-ibm-plex-mono), monospace;
+}
+@utility badge-purple {
+  background: rgba(139, 92, 246, 0.15);
+  color: #A78BFA;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: var(--font-ibm-plex-mono), monospace;
+}
+
+/* ─── Pulse Animations ─── */
+@keyframes cyber-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.97); }
+}
+@keyframes radar-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes neon-flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.7; }
+  94% { opacity: 1; }
+  96% { opacity: 0.8; }
+  97% { opacity: 1; }
+}
+@keyframes float-up {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes beam-scan {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+@keyframes data-stream {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100px; }
+}
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes ripple {
+  0% { transform: scale(0); opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
+}
+@keyframes slide-in-top {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(52, 225, 255, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(52, 225, 255, 0.6), 0 0 80px rgba(52, 225, 255, 0.2); }
+}
+@keyframes particle-float {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-200px) rotate(360deg); opacity: 0; }
+}
+@keyframes draw-line {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes ping-red {
+  0% { transform: scale(1); opacity: 1; }
+  75%, 100% { transform: scale(2.5); opacity: 0; }
+}
+
+.animate-cyber-pulse { animation: cyber-pulse 2s ease-in-out infinite; }
+.animate-radar { animation: radar-spin 3s linear infinite; }
+.animate-neon-flicker { animation: neon-flicker 4s ease infinite; }
+.animate-float { animation: float-up 3s ease-in-out infinite; }
+.animate-glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
+.animate-particle { animation: particle-float 4s ease-in-out infinite; }
+.animate-draw-line { animation: draw-line 2s ease forwards; }
+.animate-ping-red { animation: ping-red 1.5s ease-out infinite; }
+.animate-blink { animation: blink-cursor 1s step-end infinite; }
+.animate-slide-in { animation: slide-in-top 0.3s ease forwards; }
+
+/* ─── ID / Mono Chip ─── */
+@utility id-chip {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: #34E1FF;
+  background: rgba(52, 225, 255, 0.08);
+  border: 1px solid rgba(52, 225, 255, 0.2);
+  border-radius: 4px;
+  padding: 2px 6px;
+  letter-spacing: 0.05em;
+}
+
+/* ─── Dividers ─── */
+@utility cyber-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(52, 225, 255, 0.2), rgba(139, 92, 246, 0.2), transparent);
+}
+
+/* ─── Sidebar active state ─── */
+@utility sidebar-active {
+  background: linear-gradient(135deg, rgba(255, 213, 74, 0.15) 0%, rgba(255, 213, 74, 0.05) 100%);
+  border: 1px solid rgba(255, 213, 74, 0.3);
+  color: #FFD54A;
+  box-shadow: 0 0 20px rgba(255, 213, 74, 0.1), inset 0 0 20px rgba(255, 213, 74, 0.03);
+}
+
+/* ─── Terminal / Log style ─── */
+@utility terminal-text {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 11px;
+  color: #36F097;
+  background: rgba(6, 12, 28, 0.8);
+  border: 1px solid rgba(54, 240, 151, 0.15);
+  border-radius: 8px;
+  padding: 12px 16px;
+  line-height: 1.6;
+}
+
+/* ─── Priority Stamps ─── */
+@utility p1-stamp {
+  background: rgba(255, 90, 95, 0.15);
+  color: #FF5A5F;
+  border: 1px solid rgba(255, 90, 95, 0.4);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 9px;
+  font-weight: 800;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.1em;
+}
+@utility p2-stamp {
+  background: rgba(255, 167, 38, 0.15);
+  color: #FFA726;
+  border: 1px solid rgba(255, 167, 38, 0.4);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 9px;
+  font-weight: 800;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.1em;
+}
+@utility p3-stamp {
+  background: rgba(52, 225, 255, 0.1);
+  color: #34E1FF;
+  border: 1px solid rgba(52, 225, 255, 0.3);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 9px;
+  font-weight: 800;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  letter-spacing: 0.1em;
 }

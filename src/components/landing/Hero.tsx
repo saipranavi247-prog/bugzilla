@@ -34,17 +34,22 @@ export default function Hero() {
           </p>
         </div>
         
-        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
-          <Link href="/auth" className="w-full sm:w-auto">
-            <Button size="lg" className="w-full h-14 px-8 text-lg bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25 rounded-full transition-all hover:scale-105">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 w-full md:w-auto">
+          <Link href="/auth" className="w-full md:w-auto">
+            <Button size="lg" className="w-full h-14 px-8 text-lg bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/25 rounded-full transition-all hover:scale-105 cursor-pointer">
               Get Started
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
-          <Link href="#preview" className="w-full sm:w-auto">
-            <Button size="lg" variant="outline" className="w-full h-14 px-8 text-lg rounded-full border-muted-foreground/30 hover:bg-secondary">
+          <Link href="/bugstudio" className="w-full md:w-auto">
+            <Button size="lg" className="w-full h-14 px-8 text-lg bg-[#FBBF24] hover:bg-[#FBBF24]/90 text-black border-2 border-black font-bold rounded-full transition-all hover:scale-105 cursor-pointer shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+              🎨 Enter BugStudio
+            </Button>
+          </Link>
+          <Link href="#preview" className="w-full md:w-auto">
+            <Button size="lg" variant="outline" className="w-full h-14 px-8 text-lg rounded-full border-muted-foreground/30 hover:bg-secondary cursor-pointer">
               <Play className="mr-2 h-5 w-5" />
-              See it in action
+              Watch Preview
             </Button>
           </Link>
         </div>
