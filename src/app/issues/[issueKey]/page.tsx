@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import IssueActions from "./IssueActions"
 import CommentsList from "./CommentsList"
 import AuditLogList from "./AuditLogList"
+import GithubIssuePanel from "./GithubIssuePanel"
 import { StatusBadge, SeverityBadge } from "@/components/bugs/shared/Badges"
 import { User, Eye, Link as LinkIcon, Paperclip } from "lucide-react"
 
@@ -140,6 +141,13 @@ export default async function IssueDetailPage({
             No related issues linked.
           </div>
         </div>
+
+        <GithubIssuePanel
+          issueId={issue.id}
+          projectConnected={Boolean(issue.project.githubOwner && issue.project.githubRepo)}
+          githubIssueNumber={issue.githubIssueNumber}
+          githubIssueUrl={issue.githubIssueUrl}
+        />
 
         <AuditLogList logs={issue.auditLogs} />
       </div>

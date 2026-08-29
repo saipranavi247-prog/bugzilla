@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma"
 import { Folder } from "lucide-react"
 import Link from "next/link"
 import { CreateProjectDialog } from "@/components/projects/CreateProjectDialog"
+import { GithubConnect } from "@/components/projects/GithubConnect"
 
 export default async function ProjectsPage() {
   const session = await auth()
@@ -32,19 +33,27 @@ export default async function ProjectsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
         {projects.map(project => (
-          <Link key={project.id} href={`/issues?project=${project.id}`} className="block">
-            <div className="bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-all hover:border-primary/50 cursor-pointer h-full flex flex-col">
+          <div key={project.id} className="bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-all hover:border-primary/50 h-full flex flex-col">
+            <Link href={`/issues?project=${project.id}`} className="block flex-1">
               <h3 className="text-xl font-bold text-foreground">{project.name}</h3>
               <p className="text-sm font-medium text-muted-foreground mt-1 uppercase tracking-wider">{project.key}</p>
-              
-              <p className="text-muted-foreground mt-4 text-sm flex-1">{project.description}</p>
-              
+
+              <p className="text-muted-foreground mt-4 text-sm">{project.description}</p>
+
               <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
                 <span className="text-sm font-medium text-muted-foreground">Total Issues</span>
                 <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-bold">{project._count.issues}</span>
               </div>
+            </Link>
+
+            <div className="mt-3">
+              <GithubConnect
+                projectId={project.id}
+                githubOwner={project.githubOwner}
+                githubRepo={project.githubRepo}
+              />
             </div>
-          </Link>
+          </div>
         ))}
       </div>
       

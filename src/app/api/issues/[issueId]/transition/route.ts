@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
+import { setGithubIssueState } from "@/lib/github"
 
 export async function POST(
   req: NextRequest,
@@ -27,6 +28,28 @@ export async function POST(
     })
 
     if (!issue) return NextResponse.json({ error: "Issue not found" }, { status: 404 })
+
+    if (issue.githubIssueNumber && issue.project.githubOwner && issue.project.githubRepo) {
+      const newStateDef = issue.project.workflows.find(w => w.name === status)
+      if (newStateDef?.isTerminal || newStateDef?.isInitial) {
+        const connector = issue.project.githubConnectedById
+          ? await prisma.user.findUnique({ where: { id: issue.project.githubConnectedById } })
+          : null
+        if (connector?.githubAccessToken) {
+          try {
+            await setGithubIssueState(
+              connector.githubAccessToken,
+              issue.project.githubOwner,
+              issue.project.githubRepo,
+              issue.githubIssueNumber,
+              newStateDef.isTerminal ? "closed" : "open"
+            )
+          } catch (err) {
+            console.error("Failed to sync issue state to GitHub:", err)
+          }
+        }
+      }
+    }
 
     const currentStateDef = issue.project.workflows.find(w => w.name === issue.status)
     if (currentStateDef) {

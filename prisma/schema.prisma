@@ -14,15 +14,21 @@ model User {
   id            String    @id @default(uuid())
   name          String
   email         String    @unique
-  passwordHash  String
+  passwordHash  String?
   role          String    @default("developer") // admin, developer, reporter
   createdAt     DateTime  @default(now())
-  
+
+  githubId          String? @unique
+  githubUsername    String?
+  githubAccessToken String?
+  githubAvatarUrl   String?
+
   reportedIssues Issue[]  @relation("Reporter")
   assignedIssues Issue[]  @relation("Assignee")
   comments       Comment[]
   auditLogs      AuditLog[]
   watchers       Watcher[]
+  connectedProjects Project[] @relation("GithubConnector")
 }
 
 model Project {
@@ -31,7 +37,14 @@ model Project {
   key         String   @unique // e.g., "BUG"
   description String?
   createdAt   DateTime @default(now())
-  
+
+  githubOwner         String?
+  githubRepo          String?
+  githubWebhookId     String?
+  githubWebhookSecret String?
+  githubConnectedById String?
+  githubConnectedBy   User?    @relation("GithubConnector", fields: [githubConnectedById], references: [id])
+
   issues      Issue[]
   workflows   WorkflowState[]
   components  Component[]
@@ -102,7 +115,10 @@ model Issue {
   componentId String?
   versionId   String?
   milestoneId String?
-  
+
+  githubIssueNumber Int?
+  githubIssueUrl    String?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -138,6 +154,8 @@ model Comment {
   issueId   String
   userId    String
   createdAt DateTime @default(now())
+
+  githubCommentId String?
 
   issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
   author    User     @relation(fields: [userId], references: [id], onDelete: Cascade)

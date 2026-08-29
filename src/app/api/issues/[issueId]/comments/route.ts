@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
+import { createGithubIssueComment } from "@/lib/github"
 
 export async function POST(
   req: NextRequest,
@@ -31,6 +32,38 @@ export async function POST(
         author: true
       }
     })
+
+    // Best-effort sync to the linked GitHub issue, if this project/issue is connected
+    const issue = await prisma.issue.findUnique({
+      where: { id: issueId },
+      include: { project: true }
+    })
+
+    if (issue?.githubIssueNumber && issue.project.githubOwner && issue.project.githubRepo) {
+      const author = await prisma.user.findUnique({ where: { id: session.user.id as string } })
+      const connector = issue.project.githubConnectedById
+        ? await prisma.user.findUnique({ where: { id: issue.project.githubConnectedById } })
+        : null
+      const token = author?.githubAccessToken || connector?.githubAccessToken
+
+      if (token) {
+        try {
+          const ghComment = await createGithubIssueComment(
+            token,
+            issue.project.githubOwner,
+            issue.project.githubRepo,
+            issue.githubIssueNumber,
+            `**${author?.name || "BugRadar user"}** commented on BugRadar [${issue.issueKey}]:\n\n${content}`
+          )
+          await prisma.comment.update({
+            where: { id: comment.id },
+            data: { githubCommentId: String(ghComment.id) }
+          })
+        } catch (err) {
+          console.error("Failed to sync comment to GitHub:", err)
+        }
+      }
+    }
 
     return NextResponse.json(comment, { status: 201 })
   } catch (error) {
