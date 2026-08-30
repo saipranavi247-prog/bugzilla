@@ -29,6 +29,8 @@ model User {
   auditLogs      AuditLog[]
   watchers       Watcher[]
   connectedProjects Project[] @relation("GithubConnector")
+  attachments    Attachment[]
+  mentions       Mention[]
 }
 
 model Project {
@@ -132,6 +134,8 @@ model Issue {
   comments    Comment[]
   auditLogs   AuditLog[]
   watchers    Watcher[]
+  attachments Attachment[]
+  mentions    Mention[]
   
   // Dependencies
   blocking    IssueLink[] @relation("Blocking")
@@ -159,6 +163,8 @@ model Comment {
 
   issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
   author    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attachments Attachment[]
+  mentions    Mention[]
 }
 
 model AuditLog {
@@ -182,4 +188,33 @@ model Watcher {
   issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
   
   @@unique([userId, issueId])
+}
+
+model Attachment {
+  id        String   @id @default(uuid())
+  url       String
+  filename  String
+  size      Int
+  mimeType  String
+  
+  uploaderId String
+  issueId    String?
+  commentId  String?
+  createdAt  DateTime @default(now())
+
+  uploader   User     @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+  issue      Issue?   @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  comment    Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+}
+
+model Mention {
+  id        String   @id @default(uuid())
+  userId    String
+  issueId   String?
+  commentId String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  issue     Issue?   @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
 }

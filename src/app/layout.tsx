@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ToastProvider } from "@/components/ToastProvider";
 import CommandPalette from "@/components/CommandPalette";
+import AppLayoutWrapper from "@/components/AppLayoutWrapper";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -42,13 +43,9 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <ToastProvider>
-            <Navbar />
-            <div className="flex flex-1 overflow-hidden h-[calc(100vh-64px)]">
-              <Sidebar />
-              <main className="flex-1 overflow-y-auto cyber-grid">
-                {children}
-              </main>
-            </div>
+            <AppLayoutWrapper navbar={<Navbar />} sidebar={<Sidebar />}>
+              {children}
+            </AppLayoutWrapper>
             <CommandPalette />
           </ToastProvider>
         </ThemeProvider>

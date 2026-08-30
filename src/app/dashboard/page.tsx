@@ -97,7 +97,7 @@ export default async function DashboardPage() {
               <span className="font-mono text-[10px] text-[#36F097] tracking-widest uppercase">System Online · Mission Active</span>
             </div>
             <h1 className="font-sans font-bold text-3xl text-[#F8FAFC] leading-tight mb-2">
-              Welcome back, <span className="text-[#FFD54A]">Detective Triveni.</span>
+              Welcome back, <span className="text-[#FFD54A]">Detective {session.user.name?.split(' ')[0] || "Triveni"}.</span>
             </h1>
             <p className="text-[#94A3B8] font-sans text-sm">
               12 investigations assigned today · 3 critical cases require immediate attention.

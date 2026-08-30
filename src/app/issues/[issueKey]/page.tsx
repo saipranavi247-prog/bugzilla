@@ -6,17 +6,30 @@ import {
   GitBranch, MessagesSquare, FileText, Bot, Camera
 } from "lucide-react"
 
+import { prisma } from "@/lib/prisma"
+import CommentsSection from "./CommentsSection"
+
 export default async function IssueCaseFile({ params }: { params: { issueKey: string } }) {
   const session = await auth()
   if (!session?.user) redirect("/auth")
 
-  const { issueKey: id } = params
+  const { issueKey: id } = await params
   
-  // Simulated data based on the ID
-  const isCritical = id === "DT-1024" || id === "DT-1045"
-  const title = isCritical 
-    ? "Heap use-after-free in V8-to-DOM wrapper during concurrent GC cycle" 
-    : "Subgrid nested track alignment collapses to zero height on flex child"
+  const issue = await prisma.issue.findUnique({
+    where: { issueKey: id },
+    include: {
+      assignee: true,
+      component: true,
+      comments: { include: { author: true }, orderBy: { createdAt: 'asc' } }
+    }
+  })
+
+  if (!issue) {
+    return <div className="p-8 text-white text-center font-mono mt-20">CASE NOT FOUND: {id}</div>
+  }
+
+  const isCritical = issue.severity === "critical"
+  const title = issue.title
   
   return (
     <div className="p-8 space-y-6 max-w-7xl mx-auto">
@@ -112,55 +125,7 @@ Allocation failed - JavaScript heap out of memory
               <h3 className="font-sans font-bold text-sm text-[#F8FAFC]">Investigation Log</h3>
             </div>
             
-            <div className="space-y-6">
-              {/* Comment 1 */}
-              <div className="flex gap-4">
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#FFD54A] to-[#F59E0B] shrink-0 flex items-center justify-center font-bold text-xs text-[#050816]">T</div>
-                <div>
-                  <div className="flex items-center space-x-2 mb-1">
-                    <span className="font-sans font-bold text-sm text-[#F8FAFC]">Triveni B.</span>
-                    <span className="font-mono text-[9px] text-[#4A5568]">2 HOURS AGO</span>
-                  </div>
-                  <p className="font-sans text-xs text-[#94A3B8]">
-                    I've managed to reproduce this locally. It only happens when the renderer process is under heavy load and a GC cycle is forced mid-render.
-                  </p>
-                </div>
-              </div>
-              
-              {/* Comment 2 */}
-              <div className="flex gap-4">
-                <div className="h-8 w-8 rounded-lg bg-[#34E1FF]/20 border border-[#34E1FF]/40 shrink-0 flex items-center justify-center font-bold text-xs text-[#34E1FF]">A</div>
-                <div>
-                  <div className="flex items-center space-x-2 mb-1">
-                    <span className="font-sans font-bold text-sm text-[#F8FAFC]">Alex Rivera</span>
-                    <span className="font-mono text-[9px] text-[#4A5568]">30 MINUTES AGO</span>
-                  </div>
-                  <p className="font-sans text-xs text-[#94A3B8]">
-                    Looking at the memory dump, BugBot is right. The DOM wrapper is dangling. I'll open a PR with the <code>TracedReference</code> upgrade shortly.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Input */}
-            <div className="mt-6 flex items-start gap-3">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-[#FF5A5F] to-[#8B5CF6] shrink-0 flex items-center justify-center font-bold text-xs text-white">T</div>
-              <div className="flex-1 bg-[#050816] border border-[#1E2D4A] focus-within:border-[#34E1FF]/40 rounded-xl p-3 transition-all">
-                <textarea 
-                  className="w-full bg-transparent text-xs text-[#F8FAFC] placeholder-[#4A5568] outline-none resize-none h-16 font-mono"
-                  placeholder="Add evidence or comment to the case file..."
-                />
-                <div className="flex justify-between items-center mt-2">
-                  <div className="flex gap-2">
-                    <button className="text-[#4A5568] hover:text-[#34E1FF]"><Camera className="h-4 w-4" /></button>
-                    <button className="text-[#4A5568] hover:text-[#34E1FF]"><FileText className="h-4 w-4" /></button>
-                  </div>
-                  <button className="bg-[#34E1FF]/10 text-[#34E1FF] border border-[#34E1FF]/20 px-4 py-1.5 rounded-lg font-mono text-[9px] hover:bg-[#34E1FF]/20">
-                    SUBMIT
-                  </button>
-                </div>
-              </div>
-            </div>
+            <CommentsSection issueId={issue.id} initialComments={issue.comments as any[]} />
           </div>
         </div>
 
