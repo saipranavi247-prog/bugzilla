@@ -1,7 +1,6 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "./lib/prisma"
-import { verifyFirebaseIdToken } from "./lib/firebase-admin"
 import { getAuthenticatedGithubUser } from "./lib/github"
 import bcrypt from "bcryptjs"
 
@@ -61,6 +60,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           // (obtained client-side via Firebase's GitHub popup flow) lets us call
           // the GitHub API. We cross-check the two so a client can't hand us an
           // arbitrary access token paired with someone else's Firebase session.
+          const { verifyFirebaseIdToken } = await import("./lib/firebase-admin")
           const decoded = await verifyFirebaseIdToken(credentials.idToken as string)
           const email = decoded.email
           const verifiedGithubId = (decoded.firebase?.identities?.["github.com"] as string[] | undefined)?.[0]
