@@ -14,8 +14,7 @@ export default function AuthPage() {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
-  const [scanning, setScanning] = useState(false)
-  const [scanProgress, setScanProgress] = useState(0)
+
   const [loading, setLoading] = useState(false)
   const [githubLoading, setGithubLoading] = useState(false)
 
@@ -71,22 +70,7 @@ export default function AuthPage() {
     }
   }
 
-  const holdScan = () => {
-    if (scanning) return
-    setScanning(true)
-    setScanProgress(0)
-    let prog = 0
-    const iv = setInterval(() => {
-      prog += 2
-      setScanProgress(prog)
-      if (prog >= 100) {
-        clearInterval(iv)
-        setScanning(false)
-        setScanProgress(0)
-        handleSubmit({ preventDefault: () => {} } as React.FormEvent)
-      }
-    }, 40)
-  }
+
 
   return (
     <div className="min-h-screen cyber-grid flex relative overflow-hidden">
@@ -220,26 +204,7 @@ export default function AuthPage() {
               <button type="button" className="font-mono text-[9px] text-[#34E1FF] hover:text-[#34E1FF]/80">Lost my keys?</button>
             </div>
 
-            {/* Biometric scanner */}
-            <div className="text-center space-y-2">
-              <div className="font-mono text-[9px] text-[#4A5568] uppercase tracking-widest">Biometric Inspector Clearance</div>
-              <button
-                type="button"
-                onMouseDown={holdScan}
-                className="relative mx-auto h-16 w-16 rounded-full bg-[#0D1324] border-2 border-[#1E2D4A] hover:border-[#34E1FF]/40 flex items-center justify-center transition-all cursor-pointer group"
-              >
-                <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 64 64">
-                  <circle cx="32" cy="32" r="28" fill="none" stroke="#1E2D4A" strokeWidth="3" />
-                  {scanning && (
-                    <circle cx="32" cy="32" r="28" fill="none" stroke="#34E1FF" strokeWidth="3"
-                      strokeDasharray={`${175.9 * scanProgress / 100} 175.9`} strokeLinecap="round"
-                      className="transition-all" />
-                  )}
-                </svg>
-                <Fingerprint className={`h-7 w-7 transition-colors ${scanning ? "text-[#34E1FF]" : "text-[#4A5568] group-hover:text-[#34E1FF]"}`} />
-              </button>
-              <div className="font-mono text-[9px] text-[#4A5568]">Hold to scan</div>
-            </div>
+
 
             {/* Submit */}
             <button type="submit" disabled={loading}

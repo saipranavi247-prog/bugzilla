@@ -34,25 +34,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setToasts((prev) => prev.filter((t) => t.id !== id))
   }
 
-  // Simulate random incoming bugs (for the Hackathon demo feel)
-  useEffect(() => {
-    const simEvents = [
-      { type: "critical" as ToastType, title: "SYSTEM ALERT", message: "Production database cluster node failure." },
-      { type: "warning" as ToastType, title: "DT-1092 LOGGED", message: "High latency detected on checkout API." },
-      { type: "info" as ToastType, title: "BUGBOT UPDATE", message: "Finished analyzing 43 stack traces." },
-      { type: "info" as ToastType, title: "SQUAD ACTIVITY", message: "Alex Rivera opened PR #445" }
-    ]
 
-    const interval = setInterval(() => {
-      // 30% chance to show a toast every 10 seconds
-      if (Math.random() < 0.3) {
-        const randomEvent = simEvents[Math.floor(Math.random() * simEvents.length)]
-        addToast(randomEvent)
-      }
-    }, 10000)
-
-    return () => clearInterval(interval)
-  }, [])
 
   return (
     <ToastContext.Provider value={{ addToast }}>
